@@ -1,6 +1,6 @@
 package dev.arctic.interactivemenuapi.events;
 
-import dev.arctic.interactivemenuapi.interfaces.IInteractiveMenu;
+import dev.arctic.interactivemenuapi.interfaces.IMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MenuInteractionEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
-    private final IInteractiveMenu menu;
+    private final IMenu menu;
     private final String elementFlag;
     private final Player player;
 
@@ -22,7 +22,7 @@ public class MenuInteractionEvent extends Event {
      * @param elementFlag The string flag of the interacted element.
      * @param player The player who interacted with the element.
      */
-    public MenuInteractionEvent(IInteractiveMenu menu, String elementFlag, Player player) {
+    public MenuInteractionEvent(IMenu menu, String elementFlag, Player player) {
         this.menu = menu;
         this.elementFlag = elementFlag;
         this.player = player;
@@ -33,7 +33,7 @@ public class MenuInteractionEvent extends Event {
      *
      * @return The InteractiveMenu.
      */
-    public IInteractiveMenu getMenu() {
+    public IMenu getMenu() {
         return menu;
     }
 

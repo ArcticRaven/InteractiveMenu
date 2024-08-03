@@ -1,78 +1,181 @@
 package dev.arctic.interactivemenuapi.interfaces;
 
-import dev.arctic.interactivemenuapi.Element;
-import net.kyori.adventure.text.Component;
+import dev.arctic.interactivemenuapi.objects.Division;
+import dev.arctic.interactivemenuapi.objects.Menu;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
-import java.util.UUID;
-
+/**
+ * Interface representing a generic Element in the Interactive Menu API.
+ * All specific element types should implement this interface or its sub-interfaces.
+ */
 public interface IElement {
-    /**
-     * Gets the UUID of the interaction entity associated with this element.
-     * @return The UUID of the interaction entity.
-     */
-    UUID getInteractionUUID();
 
     /**
-     * Updates the location of the element based on the anchor location.
-     * @param anchorLocation The new anchor location.
+     * Updates the location of the element relative to its parent division's location.
+     *
+     * @param divisionLocation The location of the parent division.
      */
-    void updateLocation(Location anchorLocation);
+    void updateLocation(Location divisionLocation);
 
     /**
-     * Handles the event when a player interacts with this element.
-     * @param player The player who interacted with the element.
-     */
-    void fireEvent(Player player);
-
-    /**
-     * Cleans up the resources associated with this element.
+     * Cleans up the element, removing any associated entities and freeing resources.
      */
     void cleanup();
 
     /**
-     * Sets the display text of the element.
-     * @param text The new display text.
+     * Handles interactions with the element.
      */
-    void setText(Component text);
+    void onInteract();
 
     /**
-     * Sets the tooltip text of the element.
-     * @param tooltip The new tooltip text.
+     * Applies any necessary animations to the element.
      */
-    void setTooltip(Component tooltip);
+    void applyAnimation();
 
     /**
-     * Sets the secondary text of the element (used for button animations).
-     * @param secondaryText The new secondary text.
+     * Gets the parent menu of this element.
+     *
+     * @return The parent menu.
      */
-    void setSecondaryText(Component secondaryText);
-
-    void setItem(ItemStack item);
-
-    void setScale(float scale);
-
-    void setRotation(float yaw, float pitch);
+    Menu getParentMenu();
 
     /**
-     * Sets the animation type of the element.
-     * @param animationType The new animation type.
+     * Sets the parent menu of this element.
+     *
+     * @param parentMenu The parent menu.
      */
-    void setAnimationType(Element.AnimationType animationType);
+    void setParentMenu(Menu parentMenu);
 
     /**
-     * Gets the current animation type of the element.
-     * @return The current animation type.
+     * Gets the parent division of this element.
+     *
+     * @return The parent division.
      */
-    Element.AnimationType getAnimationType();
+    Division getParentDivision();
 
     /**
-     * Checks if the element is currently pressed.
-     * @return True if the element is pressed, false otherwise.
+     * Sets the parent division of this element.
+     *
+     * @param parentDivision The parent division.
+     */
+    void setParentDivision(Division parentDivision);
+
+    /**
+     * Gets the current location of this element.
+     *
+     * @return The current location.
+     */
+    Location getCurrentLocation();
+
+    /**
+     * Sets the current location of this element.
+     *
+     * @param currentLocation The current location.
+     */
+    void setCurrentLocation(Location currentLocation);
+
+    /**
+     * Gets the offset of this element relative to the parent division's location.
+     *
+     * @return The offset.
+     */
+    Vector getOffset();
+
+    /**
+     * Sets the offset of this element relative to the parent division's location.
+     *
+     * @param offset The offset.
+     */
+    void setOffset(Vector offset);
+}
+
+/**
+ * Interface representing a Text Element in the Interactive Menu API.
+ * Text Elements have no interactions or animations.
+ */
+public interface ITextElement extends IElement {
+}
+
+/**
+ * Interface representing a Toggle Element in the Interactive Menu API.
+ * Toggle Elements can switch between two states: Pressed and Unpressed.
+ */
+public interface IToggleElement extends IElement {
+
+    /**
+     * Toggles the state of the element.
+     */
+    void toggle();
+
+    /**
+     * Gets whether the element is currently pressed.
+     *
+     * @return True if pressed, false otherwise.
      */
     boolean isPressed();
 
+    /**
+     * Sets whether the element is currently pressed.
+     *
+     * @param pressed True if pressed, false otherwise.
+     */
     void setPressed(boolean pressed);
+}
+
+/**
+ * Interface representing a Display Element in the Interactive Menu API.
+ * Display Elements show a single ItemStack.
+ */
+public interface IDisplayElement extends IElement {
+
+    /**
+     * Gets the item being displayed by this element.
+     *
+     * @return The displayed ItemStack.
+     */
+    ItemStack getDisplayItem();
+
+    /**
+     * Sets the item to be displayed by this element.
+     *
+     * @param displayItem The ItemStack to display.
+     */
+    void setDisplayItem(ItemStack displayItem);
+}
+
+/**
+ * Interface representing an Overlay Element in the Interactive Menu API.
+ * Overlay Elements are layered in front of other elements and can either be timed or interactively removed.
+ */
+public interface IOverlayElement extends IElement {
+
+    /**
+     * Gets whether the overlay element should be interactively removed.
+     *
+     * @return True if interactively removed, false otherwise.
+     */
+    boolean isInteractToRemove();
+
+    /**
+     * Sets whether the overlay element should be interactively removed.
+     *
+     * @param interactToRemove True if interactively removed, false otherwise.
+     */
+    void setInteractToRemove(boolean interactToRemove);
+
+    /**
+     * Gets the display duration of the overlay element in ticks.
+     *
+     * @return The display duration in ticks.
+     */
+    long getDisplayDuration();
+
+    /**
+     * Sets the display duration of the overlay element in ticks.
+     *
+     * @param displayDuration The display duration in ticks.
+     */
+    void setDisplayDuration(long displayDuration);
 }
